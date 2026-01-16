@@ -1,0 +1,22 @@
+# Dockerfile for development
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install PostgreSQL client for migrations
+RUN apk add --no-cache postgresql-client
+
+# Copy package files
+COPY package.json package-lock.json* ./
+
+# Install all dependencies (including devDependencies for development)
+RUN npm ci
+
+# Copy project files
+COPY . .
+
+# Expose port
+EXPOSE 3000
+
+# Default command (can be overridden in docker-compose)
+CMD ["npm", "run", "dev"]
